@@ -3,7 +3,7 @@ package com.android.photogallery.api
 import okhttp3.Interceptor
 import okhttp3.Response
 
-private const val API_KEY = "d80e0fbab7551485a80a02a521f228eb"
+private const val API_KEY = "05e08e041d7865a8e75edf1a5331fa4f"
 
 class PhotoInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
@@ -15,7 +15,7 @@ class PhotoInterceptor : Interceptor {
             .addQueryParameter("nojsoncallback", "1")
             .addQueryParameter("extras", "url_s")
             .build()
-        // Build new request using new Url
+
         val newRequest = request.newBuilder()
             .url(newUrl)
             .build()

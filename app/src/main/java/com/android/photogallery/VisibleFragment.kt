@@ -15,29 +15,42 @@ abstract class VisibleFragment : Fragment() {
 
     private val onShowNotification = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            // If we receive this, we're visible, so cancel
-            // the notification
+            // If we receive this, we're visible, so cancel the notification
             Log.i(TAG, "canceling notification")
-            resultCode = Activity.RESULT_CANCELED
+            setResultCode(Activity.RESULT_CANCELED)
         }
     }
 
     override fun onStart() {
         super.onStart()
         val filter = IntentFilter(PollWorker.ACTION_SHOW_NOTIFICATION)
-        ContextCompat.registerReceiver(
-            requireActivity(),
-            onShowNotification,
-            filter,
-            PollWorker.PERM_PRIVATE,
-            null,
-            ContextCompat.RECEIVER_NOT_EXPORTED
-        )
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+            // API 33+ 需要明确指定导出标志
+            ContextCompat.registerReceiver(
+                requireContext(),
+                onShowNotification,
+                filter,
+                PollWorker.PERM_PRIVATE,
+                null,
+                ContextCompat.RECEIVER_NOT_EXPORTED
+            )
+        } else {
+            // 低版本使用传统方法
+            @Suppress("DEPRECATION")
+            ContextCompat.registerReceiver(
+                requireContext(),
+                onShowNotification,
+                filter,
+                PollWorker.PERM_PRIVATE,
+                null,
+                ContextCompat.RECEIVER_NOT_EXPORTED
+            )
+        }
     }
 
     override fun onStop() {
         super.onStop()
-        requireActivity().unregisterReceiver(onShowNotification)
+        requireContext().unregisterReceiver(onShowNotification)
     }
-
 }

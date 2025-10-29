@@ -43,7 +43,12 @@ class PollWorker(val context: Context, workerParameters: WorkerParameters) :
             QueryPreferences.setLastResultId(context, resultId)
 
             val intent = PhotoGalleryActivity.newIntent(context)
-            val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
+            val pendingIntent = PendingIntent.getActivity(
+                context,
+                0,
+                intent,
+                PendingIntent.FLAG_IMMUTABLE
+            )
 
             val resources = context.resources
             val notification = NotificationCompat
@@ -76,8 +81,8 @@ class PollWorker(val context: Context, workerParameters: WorkerParameters) :
 
     companion object {
         const val ACTION_SHOW_NOTIFICATION =
-            "com.bignerdranch.android.photogallery.SHOW_NOTIFICATION"
-        const val PERM_PRIVATE = "com.bignerdranch.android.photogallery.PRIVATE"
+            "com.android.photogallery.SHOW_NOTIFICATION"
+        const val PERM_PRIVATE = "com.android.photogallery.PRIVATE"
         const val REQUEST_CODE = "REQUEST_CODE"
         const val NOTIFICATION = "NOTIFICATION"
     }
